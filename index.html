@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신입 온보딩 | 기본 비즈니스 매너</title>
+<style>
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e94560;
+    --accent2: #0f3460;
+    --accent3: #533483;
+    --light: #f5f5f5;
+    --text: #333;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Pretendard', 'Noto Sans KR', sans-serif;
+    background: var(--primary);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* Slide Container */
+  #slides {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 64px;
+    opacity: 0;
+    transform: translateX(60px);
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(.4,0,.2,1), transform 0.45s cubic-bezier(.4,0,.2,1);
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* Slide backgrounds */
+  .slide-cover { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); color: #fff; }
+  .slide-dark  { background: linear-gradient(135deg, #16213e 0%, #0f3460 100%); color: #fff; }
+  .slide-light { background: #f8f9fc; color: var(--text); }
+  .slide-accent{ background: linear-gradient(135deg, #e94560 0%, #c0392b 100%); color: #fff; }
+  .slide-purple{ background: linear-gradient(135deg, #533483 0%, #3d2580 100%); color: #fff; }
+  .slide-teal  { background: linear-gradient(135deg, #0a7c87 0%, #0f5c74 100%); color: #fff; }
+  .slide-navy  { background: linear-gradient(135deg, #1e3a5f 0%, #152d4a 100%); color: #fff; }
+
+  /* Typography */
+  .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 16px;
+  }
+
+  h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15; }
+  h2 { font-size: clamp(24px, 3.5vw, 40px); font-weight: 700; line-height: 1.2; }
+  h3 { font-size: clamp(18px, 2.5vw, 28px); font-weight: 600; }
+  p  { font-size: clamp(14px, 1.8vw, 18px); line-height: 1.75; opacity: 0.9; }
+
+  .subtitle {
+    font-size: clamp(15px, 2vw, 22px);
+    opacity: 0.75;
+    margin-top: 16px;
+    font-weight: 400;
+  }
+
+  /* Accent bar */
+  .accent-bar {
+    width: 60px; height: 5px;
+    background: var(--accent);
+    border-radius: 3px;
+    margin-bottom: 24px;
+  }
+
+  .accent-bar.white { background: rgba(255,255,255,0.6); }
+  .accent-bar.teal  { background: #4ecdc4; }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card-grid.col2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 28px;
+    backdrop-filter: blur(8px);
+  }
+
+  .card.white-card {
+    background: #fff;
+    border: none;
+    box-shadow: var(--shadow);
+  }
+
+  .card-num {
+    font-size: 36px;
+    font-weight: 900;
+    opacity: 0.18;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .card p  { font-size: 14px; line-height: 1.65; opacity: 0.85; }
+
+  /* Icon circle */
+  .icon-wrap {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* List */
+  .styled-list { list-style: none; width: 100%; max-width: 860px; }
+  .styled-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    font-size: clamp(14px, 1.7vw, 17px);
+    line-height: 1.6;
+  }
+  .styled-list li:last-child { border-bottom: none; }
+  .styled-list .num {
+    min-width: 32px; height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .styled-list.dark-list li { border-bottom: 1px solid rgba(0,0,0,0.07); }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    background: rgba(233,69,96,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(233,69,96,0.3);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .badge.white-badge {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* Don't-do grid */
+  .dont-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .dont-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .dont-icon {
+    width: 44px; height: 44px;
+    background: rgba(233,69,96,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .dont-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .dont-card p  { font-size: 13px; opacity: 0.8; line-height: 1.6; }
+
+  /* Two column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    width: 100%;
+    max-width: 1100px;
+    align-items: center;
+  }
+
+  /* Big quote */
+  .big-quote {
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 780px;
+    position: relative;
+  }
+  .big-quote::before {
+    content: '"';
+    font-size: 120px;
+    position: absolute;
+    top: -40px; left: -20px;
+    opacity: 0.08;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  /* Steps row */
+  .steps-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 1100px;
+    flex-wrap: nowrap;
+  }
+
+  .step-item {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .step-item .step-num {
+    font-size: 28px;
+    font-weight: 900;
+    opacity: 0.25;
+    line-height: 1;
+  }
+
+  .step-item h4 { font-size: 13px; font-weight: 700; margin-top: 8px; }
+  .step-item p  { font-size: 11px; opacity: 0.7; margin-top: 4px; line-height: 1.5; }
+
+  /* Tag pills */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Progress dots */
+  #progress {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .dot.on { background: #fff; width: 24px; border-radius: 4px; }
+
+  /* Nav arrows */
+  #nav-prev, #nav-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
+    color: #fff;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 100;
+    transition: background 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  #nav-prev { left: 20px; }
+  #nav-next { right: 20px; }
+  #nav-prev:hover, #nav-next:hover { background: rgba(255,255,255,0.22); }
+
+  /* Slide counter */
+  #counter {
+    position: fixed;
+    top: 24px; right: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* Logo/title top */
+  #top-bar {
+    position: fixed;
+    top: 24px; left: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 100;
+  }
+
+  /* Highlight text */
+  .hl { color: #ffd166; }
+  .hl-red { color: #ff6b6b; }
+  .hl-green { color: #95e1d3; }
+
+  /* Divider */
+  .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.10); margin: 20px 0; }
+
+  /* Centered content */
+  .center { text-align: center; }
+
+  /* DO / DONT comparison */
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  .compare-col { border-radius: 16px; padding: 28px; }
+  .compare-col.do-col  { background: rgba(100,220,180,0.12); border: 1px solid rgba(100,220,180,0.25); }
+  .compare-col.dont-col{ background: rgba(233,69,96,0.12);  border: 1px solid rgba(233,69,96,0.25);  }
+  .compare-col h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; opacity: 0.7; letter-spacing: 1px; }
+  .compare-col ul { list-style: none; }
+  .compare-col ul li { font-size: 15px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.07); line-height: 1.6; }
+  .compare-col ul li:last-child { border-bottom: none; }
+  .compare-col ul li::before { margin-right: 10px; }
+  .do-col   ul li::before { content: '✓'; color: #64dca0; font-weight: 700; }
+  .dont-col ul li::before { content: '✗'; color: #ff6b6b; font-weight: 700; }
+
+  /* Highlight box */
+  .highlight-box {
+    background: rgba(255,255,255,0.08);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    max-width: 860px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .highlight-box p { font-size: 15px; line-height: 1.7; }
+
+  @media (max-width: 768px) {
+    .slide { padding: 32px 24px; }
+    .card-grid.col2, .card-grid.col3, .dont-grid, .two-col, .compare-row { grid-template-columns: 1fr; }
+    .steps-row { flex-wrap: wrap; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="top-bar">신입 온보딩</div>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover active" id="s0">
+<h1 style="color:#fff; max-width:700px">기본 비즈니스 매너<br><span style="color:#ffd166">실전 가이드</span></h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.6); max-width:500px">처음이라 몰랐던, 알고 나면 달라지는<br>직장 생활의 핵심 포인트</p>
+    <div style="margin-top:48px; display:flex; gap:32px; align-items:center;">
+      <div style="text-align:center; color:rgba(255,255,255,0.5)">
+        <div style="font-size:32px; font-weight:800; color:#ffd166">3</div>
+        <div style="font-size:12px; margin-top:4px">핵심 자세</div>
+      </div>
+      <div style="width:1px; height:40px; background:rgba(255,255,255,0.15)"></div>
+      <div style="text-align:center; color:rgba(255,255,255,0.5)">
+        <div style="font-size:32px; font-weight:800; color:#ffd166">10</div>
+        <div style="font-size:12px; margin-top:4px">3개월 액션</div>
+      </div>
+      <div style="width:1px; height:40px; background:rgba(255,255,255,0.15)"></div>
+      <div style="text-align:center; color:rgba(255,255,255,0.5)">
+        <div style="font-size:32px; font-weight:800; color:#ffd166">3</div>
+        <div style="font-size:12px; margin-top:4px">피해야 할 행동</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: 목차 -->
+  <div class="slide slide-dark" id="s1">
+    <div class="label" style="color:rgba(255,255,255,0.45)">Contents</div>
+    <h2 style="color:#fff; margin-bottom:32px">오늘 배울 내용</h2>
+    <div class="card-grid col2" style="max-width:900px">
+      <div class="card" style="border-left:4px solid #ffd166">
+        <div style="font-size:24px; margin-bottom:12px">😊</div>
+        <h3 style="color:#fff; margin-bottom:8px">PART 1. 신입사원의 자세</h3>
+        <p>배우는 자세, 웃음, 질문, 시간 관리</p>
+      </div>
+      <div class="card" style="border-left:4px solid #95e1d3">
+        <div style="font-size:24px; margin-bottom:12px">📋</div>
+        <h3 style="color:#fff; margin-bottom:8px">PART 2. 입사 3개월 액션</h3>
+        <p>꼭 해야 할 10가지 행동리스트</p>
+      </div>
+      <div class="card" style="border-left:4px solid #ff6b6b">
+        <div style="font-size:24px; margin-bottom:12px">⚠️</div>
+        <h3 style="color:#fff; margin-bottom:8px">PART 3. 평판 관리</h3>
+        <p>절대 하면 안 되는 4가지 행동</p>
+      </div>
+      <div class="card" style="border-left:4px solid #c77dff">
+        <div style="font-size:24px; margin-bottom:12px">💬</div>
+        <h3 style="color:#fff; margin-bottom:8px">PART 4. 커뮤니케이션</h3>
+        <p>질문법, 보고법, 비즈니스 매너</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: PART 1 인트로 -->
+  <div class="slide slide-accent" id="s2">
+    <div class="badge white-badge">PART 1</div>
+    <h1 style="color:#fff; text-align:center">신입사원의<br>3가지 핵심 자세</h1>
+    <p style="color:rgba(255,255,255,0.75); text-align:center; max-width:500px; margin-top:16px">
+      경력 3년 미만이라면, 어설프게 아는 척보다<br>겸손한 배움의 자세가 가장 강력한 무기입니다
+    </p>
+  </div>
+
+  <!-- SLIDE 4: 웃음 -->
+  <div class="slide slide-dark" id="s3">
+    <div class="badge white-badge">자세 1</div>
+    <h2 style="color:#ffd166; margin-bottom:8px">웃는 얼굴</h2>
+    <div class="accent-bar white"></div>
+    <div class="two-col" style="margin-top:8px">
+      <div>
+        <p style="font-size:18px; line-height:1.8">
+          신입사원의 가장 큰 무기는 <span class="hl">에너지</span>입니다.<br>
+          웃는 얼굴 하나가 조직 분위기를 바꿉니다.
+        </p>
+        <div class="highlight-box" style="margin-top:20px">
+          <p>신입사원은 존재 자체가 가치입니다.<br>
+          밝게 출근하고, 먼저 인사하는 것만으로도<br>
+          조직에 긍정적인 에너지를 더합니다.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="background:rgba(255,209,102,0.08); border-color:rgba(255,209,102,0.2)">
+          <div style="font-size:48px; margin-bottom:16px">😊</div>
+          <h3 style="color:#ffd166; margin-bottom:12px">실천 방법</h3>
+          <ul style="list-style:none; font-size:14px; line-height:2">
+            <li>→ 아침에 출근하면 밝게 인사</li>
+            <li>→ 복도·엘리베이터에서 눈 마주치면 고개 숙이기</li>
+            <li>→ 힘들어도 무표정 대신 미소 유지</li>
+            <li>→ 웃는 것은 <span class="hl">노력으로 달성 가능</span>한 스킬</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: 질문 -->
+  <div class="slide slide-navy" id="s4">
+    <div class="badge white-badge">자세 2</div>
+    <h2 style="color:#95e1d3; margin-bottom:8px">질문을 많이 하세요</h2>
+    <div class="accent-bar" style="background:#95e1d3"></div>
+    <div class="two-col" style="margin-top:8px">
+      <div>
+        <p style="font-size:17px; line-height:1.8">
+          개념 없는 질문이 허용되는 유일한 시기가 <span class="hl-green">신입 6개월</span>입니다.<br>
+          이 시기를 최대한 활용하세요.
+        </p>
+        <div style="margin-top:20px">
+          <div class="card" style="margin-bottom:12px; padding:16px 20px">
+            <h3 style="color:#95e1d3; font-size:14px; margin-bottom:4px">✅ 좋은 질문 유형</h3>
+            <p style="font-size:13px">프로세스 질문 — "이 결재는 어떻게 진행되나요?"<br>기준 질문 — "어떻게 하는 게 올바른 건가요?"</p>
+          </div>
+          <div class="card" style="padding:16px 20px">
+            <h3 style="color:#ff6b6b; font-size:14px; margin-bottom:4px">❌ 피해야 할 패턴</h3>
+            <p style="font-size:13px">업무 시간에 갑자기 끊어 묻기<br>이미 한 번 물어봤던 질문 반복하기</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="background:rgba(149,225,211,0.08); border-color:rgba(149,225,211,0.2); padding:28px">
+          <div style="font-size:42px; margin-bottom:16px">💡</div>
+          <h3 style="color:#95e1d3; margin-bottom:16px">질문 잘하는 3원칙</h3>
+          <ul style="list-style:none; font-size:14px; line-height:2.2">
+            <li><span style="color:#95e1d3; font-weight:700">1.</span> 먼저 충분히 찾아본 후에 질문</li>
+            <li><span style="color:#95e1d3; font-weight:700">2.</span> 여러 개 모아서 한 번에 질문</li>
+            <li><span style="color:#95e1d3; font-weight:700">3.</span> 이미 물어본 질문은 반드시 메모</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: 시간 -->
+  <div class="slide slide-purple" id="s5">
+    <div class="badge white-badge">자세 3</div>
+    <h2 style="color:#fff; margin-bottom:8px">시간을 지키세요</h2>
+    <div class="accent-bar white"></div>
+    <div class="two-col" style="margin-top:16px">
+      <div>
+        <p style="font-size:17px; line-height:1.8">
+          성과를 내려면 먼저 <span style="color:#ffd166; font-weight:700">기회</span>가 와야 합니다.<br>
+          기회는 신뢰받는 사람에게 옵니다.<br>
+          신뢰의 첫 번째 증거가 <span style="color:#ffd166; font-weight:700">시간 약속</span>입니다.
+        </p>
+        <div class="highlight-box" style="border-left-color:#c77dff; margin-top:24px">
+          <p>아무리 품질을 따져도 신입의 아웃풋은 한계가 있습니다.<br>
+          시간 하나만 지켜도 기회가 오고,<br>기회를 잡아야 성과가 납니다.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="background:rgba(255,209,102,0.08); border-color:rgba(255,209,102,0.2); padding:28px">
+          <div style="font-size:42px; margin-bottom:16px">⏰</div>
+          <h3 style="color:#ffd166; margin-bottom:16px">시간 관리 체크리스트</h3>
+          <ul style="list-style:none; font-size:14px; line-height:2.2">
+            <li>☐ 마감 기한 미리 확인 및 중간 보고</li>
+            <li>☐ 불가능한 경우 <span style="color:#ffd166">미리 연락</span>하기</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: PART 2 인트로 -->
+  <div class="slide slide-teal" id="s6">
+    <div class="badge white-badge">PART 2</div>
+    <h1 style="color:#fff; text-align:center">입사 3개월 안에<br>꼭 해야 할 <span style="color:#ffd166">10가지</span></h1>
+  </div>
+
+  <!-- SLIDE 8: 1~5번 -->
+  <div class="slide slide-dark" id="s7">
+    <div class="label" style="color:rgba(255,255,255,0.4)">3개월 액션 리스트 1–5</div>
+    <h2 style="color:#fff; margin-bottom:24px">기반 다지기</h2>
+    <ul class="styled-list" style="max-width:900px">
+      <li>
+        <div class="num">1</div>
+        <div><strong style="color:#ffd166">무조건 메모</strong> — 기억력을 믿지 마세요. 노트든 폰이든 항상 메모. 리더가 부를 때 노트 들고 가는 것만으로 태도 점수 UP</div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div><strong style="color:#95e1d3">조직도 파악</strong> — 우리 팀이 전체 구조의 어디에 위치하는지, 왜 이 팀이 존재하는지 이해</div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div><strong style="color:#c77dff">디지털 업무 일지</strong> — 종이 메모는 사라집니다. 엑셀이나 노션으로 반복 업무를 SOP로 정리. 다음번에 안 물어봐도 됨</div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div><strong style="color:#ffd166">주변 탐색</strong> — 팀 내 파트 구조와 협업 부서 파악. 누가 내 직속 리더인지, 자주 소통할 유관부서는 어디인지 확인</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 9: 6~10번 -->
+  <div class="slide slide-dark" id="s8">
+    <div class="label" style="color:rgba(255,255,255,0.4)">3개월 액션 리스트 6–10</div>
+    <h2 style="color:#fff; margin-bottom:24px">일잘러로 성장하기</h2>
+    <ul class="styled-list" style="max-width:900px">
+      <li>
+        <div class="num">6</div>
+        <div><strong style="color:#ff6b6b">갑을 관계 파악</strong> — 부서 외 협력 부서와의 관계 이해. 같은 사람이라도 사안에 따라 갑/을이 바뀜. 이해관계를 유기적으로 관찰</div>
+      </li>
+      <li>
+        <div class="num">7</div>
+        <div><strong style="color:#ffd166">팀 루틴 파악</strong> — 주간 회의, 업무 일지 마감, 점심 시간 등 팀의 고착화된 리듬을 먼저 맞추기</div>
+      </li>
+      <li>
+        <div class="num">8</div>
+        <div><strong style="color:#95e1d3">시스템 완전 습득</strong> — 회사에서 일 잘하는 사람 = 시스템 잘 쓰는 사람. 내 업무와 연관된 시스템 메뉴부터 완전히 익히기</div>
+      </li>
+      <li>
+        <div class="num">9</div>
+        <div><strong style="color:#c77dff">일의 이유 파악</strong> — 단어나 디테일보다 <strong>"왜 이 일을 하는가"</strong>가 먼저. 회의에 무심히 참여하지 말고 목적을 주도적으로 파악</div>
+      </li>
+      <li>
+        <div class="num">10</div>
+        <div><strong style="color:#ffd166">내가 뽑힌 이유 파악</strong> — 이유 없는 채용은 없습니다. 어떤 문제를 해결하려고 나를 뽑았는지 알면, 단기 목표가 명확해짐</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 10: PART 3 인트로 -->
+  <div class="slide slide-accent" id="s9">
+    <div class="badge white-badge">PART 3</div>
+    <h1 style="color:#fff; text-align:center">평판은 한 번에<br>쌓이지 않지만</h1>
+    <p style="font-size:clamp(18px,2.5vw,28px); color:rgba(255,255,255,0.9); text-align:center; margin-top:16px; font-weight:600">
+      무너지는 건 순식간입니다
+    </p>
+    <div class="highlight-box" style="border-left-color:#ffd166; margin-top:32px; max-width:680px; text-align:center; background:rgba(255,255,255,0.08)">
+      <p style="font-size:17px">워렌 버핏 — <span style="color:#ffd166; font-style:italic">"평판을 쌓는 데는 20년이 걸리지만,<br>무너뜨리는 데는 5분이면 된다."</span></p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: 4가지 NG 행동 -->
+  <div class="slide slide-dark" id="s10">
+    <div class="label" style="color:rgba(255,255,255,0.4)">절대 하면 안 되는 행동</div>
+    <h2 style="color:#fff; margin-bottom:24px">내 평판을 100% 깎아먹는 <span style="color:#ff6b6b">3가지 행동</span></h2>
+    <div class="dont-grid" style="grid-template-columns: 1fr 1fr 1fr; max-width:1000px">
+      <div class="dont-card">
+        <div class="dont-icon">🙅</div>
+        <div>
+          <h3>인사 안 하기</h3>
+          <p>복도, 엘리베이터 등 어디서든 인사를 안 하는 건 더 부자연스럽습니다. 특히 출근 후엔 꼭 인사하는 걸 추천!</p>
+        </div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-icon">🤳</div>
+        <div>
+          <h3>업무 중 핸드폰 자주 보기</h3>
+          <p>본인은 모르지만 주변에는 잘 보입니다. 초반 몇 번만 들켜도 "핸드폰 많이 보는 사람" 낙인.</p>
+        </div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-icon">🛍️</div>
+        <div>
+          <h3>회사 PC로 쇼핑몰·주식</h3>
+          <p>점심시간에 했어도 "회사에서 쇼핑몰 보는 사람"으로만 기억됩니다. 특히 신입은 금물.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: 평판 메시지 -->
+  <div class="slide slide-navy" id="s11">
+    <div class="label" style="color:rgba(255,255,255,0.4)">핵심 메시지</div>
+    <h2 style="color:#fff; margin-bottom:24px">생존 지능과 <span style="color:#95e1d3">평판</span></h2>
+    <div class="compare-row">
+      <div class="compare-col dont-col">
+        <h3 style="color:#ff6b6b">❌ 하수</h3>
+        <ul>
+          <li>관행·선입견이 잘못됐다며 불만</li>
+          <li>일만 잘하면 된다고 생각</li>
+          <li>피드백 받아도 거부·무시</li>
+          <li>규칙을 바꾸려 에너지 낭비</li>
+        </ul>
+      </div>
+      <div class="compare-col do-col">
+        <h3 style="color:#64dca0">✅ 고수</h3>
+        <ul>
+          <li>조직의 선입견을 있는 그대로 이해</li>
+          <li>눈치까지 보는 게 실력이라 인정</li>
+          <li>피드백을 빠르게 수용해 적응</li>
+          <li>그 생리를 파악해 <strong>자기에게 유리하게 활용</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:24px">
+      <p>중요한 건 선입견의 정당성이 아니라, <strong>바꿀 수 없는 선입견이 존재한다는 사실</strong>을 받아들이는 것입니다.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: PART 4 인트로 -->
+  <div class="slide slide-purple" id="s12">
+    <div class="badge white-badge">PART 4</div>
+    <h1 style="color:#fff; text-align:center">프로답게<br>커뮤니케이션하기</h1>
+    <p style="color:rgba(255,255,255,0.75); text-align:center; max-width:500px; margin-top:16px">
+      질문법, 보고법, 비즈니스 매너의 핵심
+    </p>
+    <div class="tag-row" style="justify-content:center; margin-top:28px">
+      <span class="tag">메일 에티켓</span>
+      <span class="tag">명함 에티켓</span>
+      <span class="tag">질문하는 법</span>
+      <span class="tag">보고하는 법</span>
+      <span class="tag">인사하기</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: 비즈니스 매너 기본 -->
+  <div class="slide slide-dark" id="s13">
+    <div class="label" style="color:rgba(255,255,255,0.4)">Business Manner Basics</div>
+    <h2 style="color:#fff; margin-bottom:24px">기본 비즈니스 매너</h2>
+    <div class="card-grid col3" style="max-width:1000px">
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(255,209,102,0.15)">📧</div>
+        <h3 style="color:#ffd166; margin-bottom:8px">메일 에티켓</h3>
+        <p style="font-size:13px; line-height:1.7">첫 메일엔 반드시 본인 소개.<br>제목은 핵심 내용 포함.<br>답변 모를 경우 "확인 후 OO까지 연락드리겠습니다"로 중간 답신.</p>
+      </div>
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(149,225,211,0.15)">🪪</div>
+        <h3 style="color:#95e1d3; margin-bottom:8px">명함 에티켓</h3>
+        <p style="font-size:13px; line-height:1.7">받는 사람이 읽기 편한 방향으로 두 손으로 전달.<br>받은 명함은 테이블 위에 두고 미팅 중 참고.<br>주머니에 바로 넣지 않기.</p>
+      </div>
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(199,125,255,0.15)">🙋</div>
+        <h3 style="color:#c77dff; margin-bottom:8px">인사 에티켓</h3>
+        <p style="font-size:13px; line-height:1.7">복도·엘리베이터에서 만나는 사람에게 먼저 인사.<br>상대가 내부 직원인지 불확실해도 인사 먼저.<br>밝게 인사하는 것만으로 기본 이상.</p>
+      </div>
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(255,107,107,0.15)">⏱️</div>
+        <h3 style="color:#ff6b6b; margin-bottom:8px">마감 기한 커뮤니케이션</h3>
+        <p style="font-size:13px; line-height:1.7">기한 못 맞출 것 같으면 <strong>미리</strong> 연락.<br>"언제까지 가능합니다"로 먼저 제안.<br>묵혀두다 늦는 것이 가장 나쁜 패턴.</p>
+      </div>
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(100,220,160,0.15)">🙏</div>
+        <h3 style="color:#64dca0; margin-bottom:8px">감사 표현</h3>
+        <p style="font-size:13px; line-height:1.7">도움을 받으면 반드시 감사 표현.<br>작은 감사가 큰 신뢰를 만듭니다.</p>
+      </div>
+      <div class="card">
+        <div class="icon-wrap" style="background:rgba(255,209,102,0.15)">💬</div>
+        <h3 style="color:#ffd166; margin-bottom:8px">메신저 에티켓</h3>
+        <p style="font-size:13px; line-height:1.7">읽고 답변 안 하는 것은 금물.<br>모르는 경우 "확인 후 답변" 중간 메시지 필수.<br>처음 연락은 메신저→필요시 미팅 순서.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: 질문 잘하는 법 -->
+  <div class="slide slide-navy" id="s14">
+    <div class="label" style="color:rgba(255,255,255,0.4)">Communication Skills</div>
+    <h2 style="color:#fff; margin-bottom:24px">질문 잘하는 법</h2>
+    <div class="two-col">
+      <div>
+        <ul class="styled-list">
+          <li>
+            <div class="num">1</div>
+            <div><strong style="color:#ffd166">먼저 찾아보기</strong><br><span style="font-size:13px; opacity:0.8">검색, 아카이브 문서, AI 먼저 확인 후 질문.<br>"여기까지는 찾아봤는데..."로 시작하면 훨씬 좋은 답을 받을 수 있습니다.</span></div>
+          </li>
+          <li>
+            <div class="num">2</div>
+            <div><strong style="color:#95e1d3">모아서 한 번에</strong><br><span style="font-size:13px; opacity:0.8">10개 궁금해도 하나씩 올 때마다 묻지 말기.<br>상대 업무 흐름을 끊지 않는 배려입니다.</span></div>
+          </li>
+          <li>
+            <div class="num">3</div>
+            <div><strong style="color:#c77dff">내 의견 먼저</strong><br><span style="font-size:13px; opacity:0.8">비슷한 케이스인지 확인하거나, 참고 문서 요청.<br>본인이 어느 정도 그림을 그리고 질문하면 신뢰도 UP.</span></div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="card" style="background:rgba(149,225,211,0.07); border-color:rgba(149,225,211,0.15); padding:28px">
+          <div style="font-size:36px; margin-bottom:16px">🔑</div>
+          <h3 style="color:#95e1d3; margin-bottom:16px">핵심 원칙</h3>
+          <p style="font-size:15px; line-height:1.9">
+            질문을 안 하는 것보다<br>
+            <span class="hl-green">질문을 자주 하는 팀원</span>이<br>
+            리더 입장에서 훨씬 안심됩니다.<br><br>
+            질문이 없으면 리더는<br>
+            "이 친구가 이해한 건지<br>아예 모르는 건지"<br>
+            알 방법이 없습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: 보고 잘하는 법 -->
+  <div class="slide slide-dark" id="s15">
+    <div class="label" style="color:rgba(255,255,255,0.4)">Reporting Skills</div>
+    <h2 style="color:#fff; margin-bottom:24px">보고 잘하는 법</h2>
+    <div class="card-grid col2" style="max-width:1000px">
+      <div class="card">
+        <div style="font-size:32px; margin-bottom:12px">🎯</div>
+        <h3 style="color:#ffd166; margin-bottom:10px">리더 성향 먼저 파악</h3>
+        <p style="font-size:14px; line-height:1.75">결론만 한 장으로 원하는 리더 vs 배경·목적 전체 설명을 원하는 리더. 보고 방식은 정답이 없고, 대상에 따라 달라집니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:32px; margin-bottom:12px">📊</div>
+        <h3 style="color:#95e1d3; margin-bottom:10px">데이터로 뒷받침</h3>
+        <p style="font-size:14px; line-height:1.75">수치화된 근거를 넣으면 설득력이 올라갑니다. 이미 윗선에서 통과된 보고나 회의록을 근거로 활용하면 가장 강력합니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:32px; margin-bottom:12px">🔄</div>
+        <h3 style="color:#c77dff; margin-bottom:10px">중간 보고 습관화</h3>
+        <p style="font-size:14px; line-height:1.75">최종 보고 전에 방향이 맞는지 먼저 확인. 큰 삽질을 방지하고, 상사와의 공유가 빠를수록 효율이 높아집니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:32px; margin-bottom:12px">⚡</div>
+        <h3 style="color:#ff6b6b; margin-bottom:10px">두괄식 보고</h3>
+        <p style="font-size:14px; line-height:1.75">바쁜 상사에겐 결론부터. 의사결정 포인트를 먼저 말하고 근거를 설명하는 순서가 일반적으로 선호됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: 마무리 -->
+  <div class="slide slide-cover" id="s16">
+    <div class="label" style="color:rgba(255,255,255,0.45)">Closing Message</div>
+    <h2 style="color:#ffd166; margin-bottom:16px; text-align:center">기본만 잘해도<br>중간 이상은 갑니다</h2>
+    <div class="accent-bar white" style="margin:0 auto 28px"></div>
+    <div class="card-grid col3" style="max-width:900px">
+      <div class="card" style="text-align:center; background:rgba(255,209,102,0.08); border-color:rgba(255,209,102,0.2)">
+        <div style="font-size:36px; margin-bottom:12px">😊</div>
+        <h3 style="color:#ffd166; font-size:16px">웃는 얼굴</h3>
+        <p style="font-size:13px; margin-top:8px">에너지가 존재의 가치</p>
+      </div>
+      <div class="card" style="text-align:center; background:rgba(149,225,211,0.08); border-color:rgba(149,225,211,0.2)">
+        <div style="font-size:36px; margin-bottom:12px">📝</div>
+        <h3 style="color:#95e1d3; font-size:16px">메모 & 기록</h3>
+        <p style="font-size:13px; margin-top:8px">기억력보다 기록력</p>
+      </div>
+      <div class="card" style="text-align:center; background:rgba(199,125,255,0.08); border-color:rgba(199,125,255,0.2)">
+        <div style="font-size:36px; margin-bottom:12px">⏰</div>
+        <h3 style="color:#c77dff; font-size:16px">시간 준수</h3>
+        <p style="font-size:13px; margin-top:8px">신뢰의 첫 번째 증거</p>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:28px; max-width:720px; text-align:center; background:rgba(255,255,255,0.05)">
+      <p style="font-size:16px; line-height:1.8">
+        신입 때의 실수는 괜찮습니다.<br>
+        중요한 건 <span class="hl">같은 실수를 반복하지 않는 것</span>,<br>
+        그리고 <span class="hl">초심을 잃지 않는 것</span>입니다.<br>
+        <span style="opacity:0.6; font-size:14px; display:block; margin-top:12px">여러분의 성장을 응원합니다. 💪</span>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Controls -->
+<button id="nav-prev" onclick="changeSlide(-1)">&#8592;</button>
+<button id="nav-next" onclick="changeSlide(1)">&#8594;</button>
+<div id="progress"></div>
+
+<script>
+  const TOTAL = document.querySelectorAll('.slide').length;
+  let cur = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+
+  // Build dots
+  for(let i=0; i<TOTAL; i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' on':'');
+    d.onclick = ()=>goTo(i);
+    progress.appendChild(d);
+  }
+
+  function goTo(n){
+    const slides = document.querySelectorAll('.slide');
+    const dots   = document.querySelectorAll('.dot');
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('prev');
+    cur = Math.max(0, Math.min(TOTAL-1, n));
+    slides.forEach((s,i)=>{ s.classList.remove('active','prev'); });
+    slides[cur].classList.add('active');
+    dots.forEach((d,i)=>d.classList.toggle('on', i===cur));
+    counter.textContent = (cur+1) + ' / ' + TOTAL;
+  }
+
+  function changeSlide(dir){ goTo(cur+dir); }
+
+  // Keyboard
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ') changeSlide(1);
+    if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   changeSlide(-1);
+  });
+
+  // Touch swipe
+  let tx=0;
+  document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+  document.addEventListener('touchend',  e=>{
+    const dx=tx-e.changedTouches[0].clientX;
+    if(Math.abs(dx)>50) changeSlide(dx>0?1:-1);
+  });
+
+  // Init counter
+  counter.textContent = '1 / ' + TOTAL;
+</script>
+</body>
+</html>
